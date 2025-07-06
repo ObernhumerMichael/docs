@@ -85,58 +85,15 @@ For **both Kali and Metasploitable2**:
 ### 🐉 Kali Linux
 
 1. Open a terminal.
-2. Edit the Netplan config (for newer Kali) or `/etc/network/interfaces` (for older Kali):
+2. Input the following commands:
 
-#### For Netplan (Kali 2023+)
-
-```bash
-sudo nano /etc/netplan/01-netcfg.yaml
-```
-
-Example config:
-
-```yaml
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    enp0s3:
-      dhcp4: no
-      addresses:
-        - 192.168.56.10/24
-      gateway4: 192.168.56.1
-      nameservers:
-        addresses: [8.8.8.8, 1.1.1.1]
-```
-
-Save and apply:
-
-```bash
-sudo netplan apply
-```
-
-#### For ifupdown (older Kali)
-
-Edit:
-
-```bash
-sudo nano /etc/network/interfaces
-```
-
-Add:
-
-```bash
-auto eth0
-iface eth0 inet static
-  address 192.168.56.10
-  netmask 255.255.255.0
-  gateway 192.168.56.1
-```
-
-Then:
-
-```bash
-sudo systemctl restart networking
+```sh
+nmcli connection modify "Wired connection 1" \
+ipv4.addresses 192.168.56.10/24 \
+ipv4.gateway 192.168.56.1 \
+ipv4.method manual \
+ipv4.dns 8.8.8.8
+nmcli connection down "Wired connection 1" && nmcli connection up "Wired connection 1"
 ```
 
 ### 💣 Metasploitable2
